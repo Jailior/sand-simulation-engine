@@ -11,8 +11,8 @@ const int WIDTH = 320;
 const int HEIGHT = 240;
 
 // Window resolution (can scale up)
-#define WIN_W 960
-#define WIN_H 720
+const int WIN_W = 960;
+const int WIN_H = 720;
 
 
 #endif // _COMMON_H_

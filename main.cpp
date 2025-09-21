@@ -5,16 +5,24 @@
 // Each pixel is 0xAARRGGBB (Alpha, Red, Green, Blue)
 std::vector<uint32_t> framebuffer(WIDTH * HEIGHT, 0xFF000000);
 
+enum Material { EMPTY, SAND, WATER, STONE };
+uint32_t palette[] = {
+    0xFF000000, // empty = black
+    0xFFFFFF00, // sand = yellow
+    0xFF0000FF, // water = blue
+    0xFF888888  // stone = gray
+};
+
+
 // Example simulation step: random noise
 void stepSimulation() {
     for (int i = 0; i < WIDTH * HEIGHT; i++) {
-        uint8_t r = rand() % 256;
-        uint8_t g = rand() % 256;
-        uint8_t b = rand() % 256;
-        framebuffer[i] = (0xFF << 24) | (r << 16) | (g << 8) | b; 
-        // ARGB: alpha=0xFF
+        if (framebuffer[i] == palette[STONE]) continue; // stone is static
+        uint mat = rand() % 4;
+        framebuffer[i] = palette[mat];
     }
 }
+
 
 int main(int argc, char* argv[]) {
     // Initialize SDL
@@ -24,7 +32,7 @@ int main(int argc, char* argv[]) {
     }
 
     // Create window with OpenGL context
-    SDL_Window* window = SDL_CreateWindow("Falling Engine",
+    SDL_Window* window = SDL_CreateWindow("Sand Simulation Engine",
                                           SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED,
                                           WIN_W, WIN_H, SDL_WINDOW_OPENGL);
     if (!window) {
