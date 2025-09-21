@@ -12,7 +12,7 @@ GLuint createTexture(std::vector<uint8_t>& framebuffer) {
     return tex;
 }
 
-void updateTexture(std::vector<uint8_t>& framebuffer ,GLuint tex) {
+void updateTexture(std::vector<uint8_t>& framebuffer, GLuint tex) {
     glBindTexture(GL_TEXTURE_2D, tex);
     glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, WIDTH, HEIGHT,
                     GL_RED, GL_UNSIGNED_BYTE, framebuffer.data());

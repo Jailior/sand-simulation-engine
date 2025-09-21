@@ -1,4 +1,4 @@
-#include "lib/common.h"
+// #include "lib/common.h"
 #include "lib/texture_tools.h"
 
 // Simple buffer: one byte per pixel (grayscale for now)
@@ -12,11 +12,13 @@ void stepSimulation() {
 }
 
 int main(int argc, char* argv[]) {
+    // Initialize SDL
     if (SDL_Init(SDL_INIT_VIDEO) < 0) {
         std::cerr << "SDL Init failed: " << SDL_GetError() << "\n";
         return -1;
     }
 
+    // Create window with OpenGL context
     SDL_Window* window = SDL_CreateWindow("Falling Engine",
                                           SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED,
                                           WIN_W, WIN_H, SDL_WINDOW_OPENGL);
@@ -24,13 +26,13 @@ int main(int argc, char* argv[]) {
         std::cerr << "SDL_CreateWindow failed: " << SDL_GetError() << "\n";
         return -1;
     }
-
     SDL_GLContext glContext = SDL_GL_CreateContext(window);
     if (!glContext) {
         std::cerr << "SDL_GL_CreateContext failed: " << SDL_GetError() << "\n";
         return -1;
     }
 
+    // Setup OpenGL state
     glViewport(0, 0, WIN_W, WIN_H);
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
