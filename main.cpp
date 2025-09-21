@@ -1,13 +1,18 @@
 // #include "lib/common.h"
 #include "lib/texture_tools.h"
 
-// Simple buffer: one byte per pixel (grayscale for now)
-std::vector<uint8_t> framebuffer(WIDTH * HEIGHT, 0);
+
+// Each pixel is 0xAARRGGBB (Alpha, Red, Green, Blue)
+std::vector<uint32_t> framebuffer(WIDTH * HEIGHT, 0xFF000000);
 
 // Example simulation step: random noise
 void stepSimulation() {
     for (int i = 0; i < WIDTH * HEIGHT; i++) {
-        framebuffer[i] = rand() % 256;
+        uint8_t r = rand() % 256;
+        uint8_t g = rand() % 256;
+        uint8_t b = rand() % 256;
+        framebuffer[i] = (0xFF << 24) | (r << 16) | (g << 8) | b; 
+        // ARGB: alpha=0xFF
     }
 }
 

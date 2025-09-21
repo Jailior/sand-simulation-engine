@@ -7,8 +7,8 @@
 #include <vector>
 
 // Grid resolution
-#define WIDTH  320
-#define HEIGHT 240
+const int WIDTH = 320;
+const int HEIGHT = 240;
 
 // Window resolution (can scale up)
 #define WIN_W 960
