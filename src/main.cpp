@@ -15,9 +15,6 @@ uint32_t palette[] = {
 };
 
 
-// Each pixel is 0xAARRGGBB (Alpha, Red, Green, Blue)
-std::vector<uint32_t> framebuffer(WIDTH * HEIGHT, palette[EMPTY]);
-std::vector<particle> grid(WIDTH * HEIGHT, {0,0,EMPTY});
 
 
 int main(int argc, char* argv[]) {
@@ -64,12 +61,12 @@ int main(int argc, char* argv[]) {
         if (mouse & SDL_BUTTON(SDL_BUTTON_RIGHT)) {
             int gx = mx * WIDTH / WIN_W;
             int gy = my * HEIGHT / WIN_H;
-            if (in_bounds(gx, gy)) grid[idx(gx, gy)].type = SAND;
+            if (in_bounds(gx, gy)) grid[idx(gx, gy)].type = Material::SAND;
         }
         if (mouse & SDL_BUTTON(SDL_BUTTON_LEFT)) {
             int gx = mx * WIDTH / WIN_W;
             int gy = my * HEIGHT / WIN_H;
-            if (in_bounds(gx, gy)) grid[idx(gx, gy)].type = WATER;
+            if (in_bounds(gx, gy)) grid[idx(gx, gy)].type = Material::WATER;
         }
 
         stepSimulation(grid, framebuffer, palette);

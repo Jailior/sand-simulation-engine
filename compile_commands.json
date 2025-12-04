@@ -1,0 +1,20 @@
+[
+{
+  "directory": "/home/jailior/sand-simulation-engine/sand-simulation-engine/build",
+  "command": "/usr/bin/c++  -isystem /usr/include/SDL2 -std=gnu++17 -o CMakeFiles/SandSimulationEngine.dir/src/main.cpp.o -c /home/jailior/sand-simulation-engine/sand-simulation-engine/src/main.cpp",
+  "file": "/home/jailior/sand-simulation-engine/sand-simulation-engine/src/main.cpp",
+  "output": "CMakeFiles/SandSimulationEngine.dir/src/main.cpp.o"
+},
+{
+  "directory": "/home/jailior/sand-simulation-engine/sand-simulation-engine/build",
+  "command": "/usr/bin/c++  -isystem /usr/include/SDL2 -std=gnu++17 -o CMakeFiles/SandSimulationEngine.dir/src/algorithm.cpp.o -c /home/jailior/sand-simulation-engine/sand-simulation-engine/src/algorithm.cpp",
+  "file": "/home/jailior/sand-simulation-engine/sand-simulation-engine/src/algorithm.cpp",
+  "output": "CMakeFiles/SandSimulationEngine.dir/src/algorithm.cpp.o"
+},
+{
+  "directory": "/home/jailior/sand-simulation-engine/sand-simulation-engine/build",
+  "command": "/usr/bin/c++  -isystem /usr/include/SDL2 -std=gnu++17 -o CMakeFiles/SandSimulationEngine.dir/src/texture_tools.cpp.o -c /home/jailior/sand-simulation-engine/sand-simulation-engine/src/texture_tools.cpp",
+  "file": "/home/jailior/sand-simulation-engine/sand-simulation-engine/src/texture_tools.cpp",
+  "output": "CMakeFiles/SandSimulationEngine.dir/src/texture_tools.cpp.o"
+}
+]

@@ -10,9 +10,10 @@ constexpr int HEIGHT = 240;
 constexpr int WIN_W = 960;
 constexpr int WIN_H = 720;
 
-enum Material : uint8_t { EMPTY, SAND, WATER, STONE };
+enum class Material : uint8_t { EMPTY, SAND, WATER, STONE };
 
 struct particle {
-    int x, y;
+    int x;
+    int y;
     Material type;
 };

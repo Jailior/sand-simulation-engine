@@ -11,26 +11,26 @@ bool in_bounds(int x, int y) {
 inline void update_sand(std::vector<particle>& grid, int x, int y) {
     int i = idx(x, y);
     // Try move down
-    if (in_bounds(x, y+1) && grid[idx(x, y+1)].type == EMPTY) {
+    if (in_bounds(x, y+1) && grid[idx(x, y+1)].type == Material::EMPTY) {
         std::swap(grid[i], grid[idx(x, y+1)]);
     }
     // Try diagonals
-    else if (in_bounds(x-1, y+1) && grid[idx(x-1, y+1)].type == EMPTY) {
+    else if (in_bounds(x-1, y+1) && grid[idx(x-1, y+1)].type == Material::EMPTY) {
         std::swap(grid[i], grid[idx(x-1, y+1)]);
     }
-    else if (in_bounds(x+1, y+1) && grid[idx(x+1, y+1)].type == EMPTY) {
+    else if (in_bounds(x+1, y+1) && grid[idx(x+1, y+1)].type == Material::EMPTY) {
         std::swap(grid[i], grid[idx(x+1, y+1)]);
     }
 }
 
 inline void update_water(std::vector<particle>& grid, int x, int y) {
     int i = idx(x, y);
-    if (in_bounds(x, y+1) && grid[idx(x, y+1)].type == EMPTY) {
+    if (in_bounds(x, y+1) && grid[idx(x, y+1)].type == Material::EMPTY) {
         std::swap(grid[i], grid[idx(x, y+1)]);
     }
     else {
         int dir = (rand() & 1) ? -1 : 1; // left or right
-        if (in_bounds(x+dir, y) && grid[idx(x+dir, y)].type == EMPTY) {
+        if (in_bounds(x+dir, y) && grid[idx(x+dir, y)].type == Material::EMPTY) {
             std::swap(grid[i], grid[idx(x+dir, y)]);
         }
     }
@@ -42,12 +42,12 @@ void stepSimulation(std::vector<particle>& grid, std::vector<uint32_t>& framebuf
     for (int y = HEIGHT - 2; y >= 0; --y) {
         for (int x = 0; x < WIDTH; ++x) {
             Material m = grid[idx(x, y)].type;
-            if (m == EMPTY || m == STONE) continue;
+            if (m == Material::EMPTY || m == Material::STONE) continue;
 
-            if (m == SAND) {
+            if (m == Material::SAND) {
                 update_sand(grid, x, y);
             }
-            else if (m == WATER) {
+            else if (m == Material::WATER) {
                 update_water(grid, x, y);
             }
         }
