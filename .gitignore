@@ -2,6 +2,7 @@ build/*
 builds/*
 .vscode/*
 SandSimulationEngine
+compile_commands.json
 
 # Prerequisites
 *.d
