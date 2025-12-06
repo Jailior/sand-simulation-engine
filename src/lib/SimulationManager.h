@@ -29,7 +29,6 @@ class SimulationManager {
         SimulationManager(const SimulationManager&) = delete;
         SimulationManager& operator=(const SimulationManager&) = delete;
 
-        void initializeFrameBuffer(std::vector<Uint32>& palette);
         std::vector<uint32_t>& getPalette();
         std::vector<uint32_t>& getFrameBuffer();
         std::vector<Particle>& getGrid();
