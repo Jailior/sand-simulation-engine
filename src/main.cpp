@@ -4,20 +4,12 @@
 #include <iostream>
 
 #include "lib/texture_tools.h"
-#include "lib/algorithm.h"
+#include "lib/SimulationManager.h"
 #include "lib/common.h"
-
-uint32_t palette[] = {
-    0xFF000000, // empty = black
-    0xFFFFFF00, // sand = yellow
-    0xFF0000FF, // water = blue
-    0xFF888888  // stone = gray
-};
-
-
 
 
 int main(int argc, char* argv[]) {
+
     // Initialize SDL
     if (SDL_Init(SDL_INIT_VIDEO) < 0) {
         std::cerr << "SDL Init failed: " << SDL_GetError() << "\n";
@@ -45,6 +37,9 @@ int main(int argc, char* argv[]) {
     glOrtho(0, 1, 1, 0, -1, 1); // Normalized quad
     glMatrixMode(GL_MODELVIEW);
 
+    auto& simManager = SimulationManager::getInstance();
+    auto& framebuffer = simManager.getFrameBuffer();
+
     GLuint tex = createTexture(framebuffer);
 
     bool running = true;
@@ -53,7 +48,6 @@ int main(int argc, char* argv[]) {
         while (SDL_PollEvent(&e)) {
             if (e.type == SDL_QUIT) running = false;
             if (e.type == SDL_KEYDOWN && e.key.keysym.sym == SDLK_ESCAPE) running = false;
-            
         }
 
         int mx, my;
@@ -61,15 +55,15 @@ int main(int argc, char* argv[]) {
         if (mouse & SDL_BUTTON(SDL_BUTTON_RIGHT)) {
             int gx = mx * WIDTH / WIN_W;
             int gy = my * HEIGHT / WIN_H;
-            if (in_bounds(gx, gy)) grid[idx(gx, gy)].type = Material::SAND;
+            simManager.setMaterialAt(gx, gy, Material::SAND);
         }
         if (mouse & SDL_BUTTON(SDL_BUTTON_LEFT)) {
             int gx = mx * WIDTH / WIN_W;
             int gy = my * HEIGHT / WIN_H;
-            if (in_bounds(gx, gy)) grid[idx(gx, gy)].type = Material::WATER;
+            simManager.setMaterialAt(gx, gy, Material::WATER);
         }
 
-        stepSimulation(grid, framebuffer, palette);
+        simManager.stepSimulation();
         updateTexture(framebuffer, tex);
 
         glClear(GL_COLOR_BUFFER_BIT);
