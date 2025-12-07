@@ -11,11 +11,7 @@
 class RenderClient {
     // THE RENDER CLIENT HANDLES ALL GRAPHICAL OUTPUT USING SDL2 AND OPENGL
     // IT RENDERS THE FRAMEBUFFER PROVIDED
-    // IT ALSO HANDLES USER INPUT (MOUSE, KEYBOARD)
-    private:
-        // Each pixel is 0xAARRGGBB (Alpha, Red, Green, Blue)
-        std::vector<uint32_t>* frameBuffer;
-        
+    // IT ALSO HANDLES USER INPUT (MOUSE, KEYBOARD)    
     public:
         RenderClient(std::vector<uint32_t>* frameBuffer);
 
@@ -29,4 +25,8 @@ class RenderClient {
         void clear();
         void renderFrame(SDL_Window* window, GLuint tex);
         void cleanup(SDL_Window* window, SDL_GLContext context, GLuint tex);
+
+    private:
+        // Each pixel is 0xAARRGGBB (Alpha, Red, Green, Blue)
+        std::vector<uint32_t>* frameBuffer;
 };
