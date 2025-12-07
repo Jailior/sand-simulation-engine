@@ -6,6 +6,19 @@
 #include "common.h"
 
 class SimulationManager {
+    public:
+        static SimulationManager& getInstance();
+
+        SimulationManager(const SimulationManager&) = delete;
+        SimulationManager& operator=(const SimulationManager&) = delete;
+
+        std::vector<uint32_t>& getPalette();
+        std::vector<uint32_t>& getFrameBuffer();
+        std::vector<Particle>& getGrid();
+
+        void stepSimulation();
+        bool setMaterialAt(int x, int y, Material type);
+    
     private:
         // Each pixel is 0xAARRGGBB (Alpha, Red, Green, Blue)
         std::vector<uint32_t> frameBuffer;
@@ -22,17 +35,4 @@ class SimulationManager {
         
         inline void updateSand(std::vector<Particle>& grid, int x, int y);
         inline void updateWater(std::vector<Particle>& grid, int x, int y);
-
-    public:
-        static SimulationManager& getInstance();
-
-        SimulationManager(const SimulationManager&) = delete;
-        SimulationManager& operator=(const SimulationManager&) = delete;
-
-        std::vector<uint32_t>& getPalette();
-        std::vector<uint32_t>& getFrameBuffer();
-        std::vector<Particle>& getGrid();
-
-        void stepSimulation();
-        bool setMaterialAt(int x, int y, Material type);
 };

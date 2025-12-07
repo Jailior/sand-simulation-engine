@@ -1,6 +1,50 @@
 #include "lib/SimulationManager.h"
 
-        
+SimulationManager& SimulationManager::getInstance() {
+    static SimulationManager instance;
+    return instance;
+}
+
+std::vector<uint32_t>& SimulationManager::getPalette() {
+    return palette;
+}
+
+std::vector<uint32_t>& SimulationManager::getFrameBuffer() {
+    return frameBuffer;
+}
+
+std::vector<Particle>& SimulationManager::getGrid() {
+    return grid;
+}
+
+void SimulationManager::stepSimulation() {
+    // Iterate from bottom up so Particles don't "fall twice"
+    for (int y = HEIGHT - 2; y >= 0; --y) {
+        for (int x = 0; x < WIDTH; ++x) {
+            Material m = grid[idx(x, y)].type;
+            if (m == Material::EMPTY || m == Material::STONE) continue;
+
+            if (m == Material::SAND) {
+                updateSand(grid, x, y);
+            }
+            else if (m == Material::WATER) {
+                updateWater(grid, x, y);
+            }
+        }
+    }
+
+    // Update frameBuffer colors
+    for (int i = 0; i < WIDTH * HEIGHT; i++) {
+        frameBuffer[i] = palette[static_cast<int>(grid[i].type)];
+    }
+}
+
+bool SimulationManager::setMaterialAt(int x, int y, Material type) {
+    if (!inBounds(x, y)) return false;
+    grid[idx(x, y)].type = type;
+    return true;
+}
+
 SimulationManager::SimulationManager() {
         palette = {
             BLACK,    // empty = black
@@ -47,49 +91,4 @@ inline void SimulationManager::updateWater(std::vector<Particle>& grid, int x, i
             std::swap(grid[i], grid[idx(x+dir, y)]);
         }
     }
-}
-
-SimulationManager& SimulationManager::getInstance() {
-    static SimulationManager instance;
-    return instance;
-}
-
-std::vector<uint32_t>& SimulationManager::getPalette() {
-    return palette;
-}
-
-std::vector<uint32_t>& SimulationManager::getFrameBuffer() {
-    return frameBuffer;
-}
-
-std::vector<Particle>& SimulationManager::getGrid() {
-    return grid;
-}
-
-void SimulationManager::stepSimulation() {
-    // Iterate from bottom up so Particles don't "fall twice"
-    for (int y = HEIGHT - 2; y >= 0; --y) {
-        for (int x = 0; x < WIDTH; ++x) {
-            Material m = grid[idx(x, y)].type;
-            if (m == Material::EMPTY || m == Material::STONE) continue;
-
-            if (m == Material::SAND) {
-                updateSand(grid, x, y);
-            }
-            else if (m == Material::WATER) {
-                updateWater(grid, x, y);
-            }
-        }
-    }
-
-    // Update frameBuffer colors
-    for (int i = 0; i < WIDTH * HEIGHT; i++) {
-        frameBuffer[i] = palette[static_cast<int>(grid[i].type)];
-    }
-}
-
-bool SimulationManager::setMaterialAt(int x, int y, Material type) {
-    if (!inBounds(x, y)) return false;
-    grid[idx(x, y)].type = type;
-    return true;
 }
