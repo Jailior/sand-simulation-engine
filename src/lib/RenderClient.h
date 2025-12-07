@@ -9,6 +9,9 @@
 #include "common.h"
 
 class RenderClient {
+    // THE RENDER CLIENT HANDLES ALL GRAPHICAL OUTPUT USING SDL2 AND OPENGL
+    // IT RENDERS THE FRAMEBUFFER PROVIDED
+    // IT ALSO HANDLES USER INPUT (MOUSE, KEYBOARD)
     private:
         // Each pixel is 0xAARRGGBB (Alpha, Red, Green, Blue)
         std::vector<uint32_t>* frameBuffer;
@@ -22,8 +25,8 @@ class RenderClient {
         bool isMouseLeftPressed(int& gx, int& gy);
         bool isMouseRightPressed(int& gx, int& gy);
         GLuint initializeTexture();
-        void updateTexture(GLuint textureID);
+        void updateTexture(GLuint tex);
         void clear();
-        void renderFrame(SDL_Window* window, GLuint textureID);
-        void cleanup(SDL_Window* window, SDL_GLContext context, GLuint textureID);
+        void renderFrame(SDL_Window* window, GLuint tex);
+        void cleanup(SDL_Window* window, SDL_GLContext context, GLuint tex);
 };

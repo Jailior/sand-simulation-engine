@@ -68,8 +68,8 @@ GLuint RenderClient::initializeTexture() {
     return tex;
 }
 
-void RenderClient::updateTexture(GLuint textureID) {
-    glBindTexture(GL_TEXTURE_2D, textureID);
+void RenderClient::updateTexture(GLuint tex) {
+    glBindTexture(GL_TEXTURE_2D, tex);
     glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, WIDTH, HEIGHT,
                     GL_BGRA, GL_UNSIGNED_BYTE, (*frameBuffer).data());
 }
@@ -78,9 +78,9 @@ void RenderClient::clear() {
     glClear(GL_COLOR_BUFFER_BIT);
 }
 
-void RenderClient::renderFrame(SDL_Window* window, GLuint textureID) {
+void RenderClient::renderFrame(SDL_Window* window, GLuint tex) {
     glEnable(GL_TEXTURE_2D);
-    glBindTexture(GL_TEXTURE_2D, textureID);
+    glBindTexture(GL_TEXTURE_2D, tex);
 
     glBegin(GL_QUADS);
         glTexCoord2f(0,0); glVertex2f(0,0);
@@ -92,8 +92,8 @@ void RenderClient::renderFrame(SDL_Window* window, GLuint textureID) {
     SDL_GL_SwapWindow(window);
 }
 
-void RenderClient::cleanup(SDL_Window* window, SDL_GLContext context, GLuint textureID) {
-    glDeleteTextures(1, &textureID);
+void RenderClient::cleanup(SDL_Window* window, SDL_GLContext context, GLuint tex) {
+    glDeleteTextures(1, &tex);
     SDL_GL_DeleteContext(context);
     SDL_DestroyWindow(window);
 }
