@@ -17,7 +17,9 @@ class RenderClient {
 
         void initializeWindow(const char* title, int width, int height, SDL_Window*& outWindow, SDL_GLContext& outContext);
         void setUpGLState(int width, int height);
-        bool isExitRequested();
+        bool isExitRequested(SDL_Event e);
+        // Returns hotbar slot index (0-based) or -1 if no hotbar input
+        int getHotbarInput(SDL_Event e, int hotbarSlots);
         bool isMouseLeftPressed(int& gx, int& gy);
         bool isMouseRightPressed(int& gx, int& gy);
         GLuint initializeTexture();

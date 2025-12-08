@@ -9,5 +9,5 @@ find_package(OpenGL REQUIRED)
 
 include_directories(${SDL2_INCLUDE_DIRS} ${OPENGL_INCLUDE_DIR})
 
-add_executable(SandSimulationEngine src/main.cpp src/SimulationManager.cpp src/RenderClient.cpp)
+add_executable(SandSimulationEngine src/main.cpp src/SimulationManager.cpp src/RenderClient.cpp src/GUIManager.cpp)
 target_link_libraries(SandSimulationEngine ${SDL2_LIBRARIES} ${OPENGL_LIBRARIES})

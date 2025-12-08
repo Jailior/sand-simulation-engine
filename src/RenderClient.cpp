@@ -26,13 +26,26 @@ void RenderClient::setUpGLState(int width, int height) {
     glMatrixMode(GL_MODELVIEW);
 }
 
-bool RenderClient::isExitRequested() {
-    SDL_Event e;
-    while (SDL_PollEvent(&e)) {
-        if (e.type == SDL_QUIT) return true;
-        if (e.type == SDL_KEYDOWN && e.key.keysym.sym == SDLK_ESCAPE) return true;
+bool RenderClient::isExitRequested(SDL_Event e) {
+    if (e.type == SDL_QUIT) {
+        return true;
+    } 
+    if (e.type == SDL_KEYDOWN && e.key.keysym.sym == SDLK_ESCAPE) {
+        return true;
     }
     return false;
+}
+
+int RenderClient::getHotbarInput(SDL_Event e, int hotbarSlots) {
+    if (e.type == SDL_KEYDOWN) {
+        if (e.key.keysym.sym >= SDLK_1 && e.key.keysym.sym <= SDLK_9) {
+            int slot = (e.key.keysym.sym - SDLK_1); // 0-based
+            if (slot >= 0 && slot < hotbarSlots) {
+                return slot;
+            }
+        }
+    }
+    return -1; // No hotbar input
 }
 
 bool RenderClient::isMouseLeftPressed(int& gx, int& gy) {

@@ -3,9 +3,10 @@
 #include <vector>
 #include <iostream>
 
+#include "lib/common.h"
+#include "lib/GUIManager.h"
 #include "lib/SimulationManager.h"
 #include "lib/RenderClient.h"
-#include "lib/common.h"
 
 bool RUNNING = true;
 
@@ -18,6 +19,7 @@ int main(int argc, char* argv[]) {
 
     auto& simManager = SimulationManager::getInstance();
     auto& framebuffer = simManager.getFrameBuffer();
+    auto* palettePtr =  &simManager.getPalette();
 
     SDL_Window* window = nullptr;
     SDL_GLContext glContext = nullptr;
@@ -31,24 +33,36 @@ int main(int argc, char* argv[]) {
         return -1;
     }
 
+    GUIManager guiManager = GUIManager();
+
     renderClient.setUpGLState(WIN_W, WIN_H);
     GLuint textureID = renderClient.initializeTexture();
 
     while (RUNNING) {
-        if (renderClient.isExitRequested()) {
-            RUNNING = false;
-            continue;
+        SDL_Event e;
+        while (SDL_PollEvent(&e)) {
+            if (renderClient.isExitRequested(e)) {
+                RUNNING = false;
+                break;
+            }
+            int hotbarInput = renderClient.getHotbarInput(e, guiManager.hotbarSlots);
+            if (hotbarInput != -1) {
+                guiManager.setSelectedHotbarSlot(hotbarInput);
+            }
         }
 
+
+        Material selectedMat = guiManager.getSelectedMaterial();
         int gx, gy;
         if (renderClient.isMouseLeftPressed(gx, gy)) {
-            simManager.setMaterialAt(gx, gy, Material::WATER);
+            simManager.setMaterialAt(gx, gy, selectedMat);
         }
         if (renderClient.isMouseRightPressed(gx, gy)) {
-            simManager.setMaterialAt(gx, gy, Material::SAND);
+            simManager.setMaterialAt(gx, gy, Material::WATER);
         }
 
         simManager.stepSimulation();
+        guiManager.drawHotBar(framebuffer, palettePtr, 0);
 
         renderClient.updateTexture(textureID);
         renderClient.clear();
