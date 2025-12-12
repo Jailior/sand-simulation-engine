@@ -3,8 +3,8 @@
 #include <GL/gl.h>
 
 // Grid resolution
-constexpr int WIDTH =   320;
-constexpr int HEIGHT =  240;
+constexpr int WIDTH =   640;
+constexpr int HEIGHT =  480;
 
 // Window resolution (can scale up)
 constexpr int WIN_W = 960;
@@ -12,8 +12,8 @@ constexpr int WIN_H = 720;
 
 constexpr uint32_t BLACK =      0xFF000000;
 constexpr uint32_t WHITE =      0xFFFFFFFF;
-constexpr uint32_t YELLOW =     0xFFFFFF00;
-constexpr uint32_t BLUE =       0xFF0000FF;
+constexpr uint32_t YELLOW =     0xFF966432;
+constexpr uint32_t BLUE =       0xC81464AA;
 constexpr uint32_t GRAY =       0xFF888888;
 constexpr uint32_t DARK_GRAY =  0xFF202020;
 

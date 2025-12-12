@@ -41,7 +41,36 @@ void SimulationManager::stepSimulation() {
 
 bool SimulationManager::setMaterialAt(int x, int y, Material type) {
     if (!inBounds(x, y)) return false;
-    grid[idx(x, y)].type = type;
+    if (type == Material::EMPTY) {
+        grid[idx(x, y)].type = type;
+    } else if (type == Material::STONE) {
+       for (int by = -7; by <= 7; by++) {
+            for (int bx = -7; bx <= 7; bx++) {
+                int nx = x + bx;
+                int ny = y + by;
+                if (inBounds(nx, ny)) {
+                    grid[idx(nx, ny)].type = type;
+                }
+            }
+        }
+    } 
+    else {
+        // place a brush of 20x20
+        for (int by = -15; by <= 15; by++) {
+            for (int bx = -15; bx <= 15; bx++) {
+                int nx = x + bx;;
+                int ny = y + by;
+                int randomOffset = (rand() % 3) - 1; // -1, 0, or 1
+                nx += randomOffset;
+                ny += randomOffset;
+                bool randomCheck = (rand() % 100) < 2; // 40% chance to place
+                if (!randomCheck) continue;
+                if (inBounds(nx, ny) && grid[idx(nx, ny)].type == Material::EMPTY) {
+                    grid[idx(nx, ny)].type = type;
+                }
+            }
+        }
+    }
     return true;
 }
 
@@ -84,6 +113,13 @@ inline void SimulationManager::updateWater(std::vector<Particle>& grid, int x, i
     int i = idx(x, y);
     if (inBounds(x, y+1) && grid[idx(x, y+1)].type == Material::EMPTY) {
         std::swap(grid[i], grid[idx(x, y+1)]);
+    }
+    // Try diagonals
+    else if (inBounds(x-1, y+1) && grid[idx(x-1, y+1)].type == Material::EMPTY) {
+        std::swap(grid[i], grid[idx(x-1, y+1)]);
+    }
+    else if (inBounds(x+1, y+1) && grid[idx(x+1, y+1)].type == Material::EMPTY) {
+        std::swap(grid[i], grid[idx(x+1, y+1)]);
     }
     else {
         int dir = (rand() & 1) ? -1 : 1; // left or right
