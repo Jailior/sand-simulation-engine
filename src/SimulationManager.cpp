@@ -44,34 +44,33 @@ bool SimulationManager::setMaterialAt(int x, int y, Material type) {
     if (type == Material::EMPTY) {
         grid[idx(x, y)].type = type;
     } else if (type == Material::STONE) {
-       for (int by = -7; by <= 7; by++) {
-            for (int bx = -7; bx <= 7; bx++) {
-                int nx = x + bx;
-                int ny = y + by;
-                if (inBounds(nx, ny)) {
-                    grid[idx(nx, ny)].type = type;
-                }
-            }
-        }
+       setMaterialSprayAt(x, y, type, 5, 100, false);
     } 
     else {
-        // place a brush of 20x20
-        for (int by = -15; by <= 15; by++) {
-            for (int bx = -15; bx <= 15; bx++) {
-                int nx = x + bx;;
+        setMaterialSprayAt(x, y, type, 15, 2, true);
+    }
+    return true;
+}
+
+// Sets material in a spray pattern with given radius and density
+// Density is percentage chance (0-100) to place a particle at each position
+void SimulationManager::setMaterialSprayAt(int x, int y, Material type, int radius, int density, bool randomOffset) {
+    for (int by = -radius; by <= radius; by++) {
+            for (int bx = -radius; bx <= radius; bx++) {
+                int nx = x + bx;
                 int ny = y + by;
-                int randomOffset = (rand() % 3) - 1; // -1, 0, or 1
-                nx += randomOffset;
-                ny += randomOffset;
-                bool randomCheck = (rand() % 100) < 2; // 40% chance to place
+                if (randomOffset) {
+                     int offset = (rand() % 3) - 1; // -1, 0, or 1
+                     nx += offset;
+                     ny += offset;
+                }
+                bool randomCheck = (rand() % 100) < density;
                 if (!randomCheck) continue;
                 if (inBounds(nx, ny) && grid[idx(nx, ny)].type == Material::EMPTY) {
                     grid[idx(nx, ny)].type = type;
                 }
             }
         }
-    }
-    return true;
 }
 
 SimulationManager::SimulationManager() {

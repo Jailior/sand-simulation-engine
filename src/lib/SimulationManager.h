@@ -35,4 +35,5 @@ class SimulationManager {
         
         inline void updateSand(std::vector<Particle>& grid, int x, int y);
         inline void updateWater(std::vector<Particle>& grid, int x, int y);
+        void setMaterialSprayAt(int x, int y, Material type, int radius, int density, bool randomOffset);
 };

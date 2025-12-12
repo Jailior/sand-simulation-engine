@@ -31,7 +31,7 @@ int GUIManager::idx(int x, int y) {
 }
 
 void GUIManager::drawHotBar(std::vector<uint32_t>& frameBuffer, std::vector<uint32_t>* palettePtr, int y0) {
-    const int bar_h = 18;
+    const int bar_h = 36;
     const int slot_w = WIDTH / hotbarSlots;
 
     drawRect(frameBuffer, 0, y0, WIDTH, bar_h, DARK_GRAY);
@@ -80,10 +80,18 @@ void GUIManager::drawDigit(std::vector<uint32_t>& frameBuffer, int x0, int y0, u
         uint8_t col = digitFont[digit][cx];
         for (int ry = 0; ry < 5; ++ry) {
             if ((col >> ry) & 1) {
-                int px = x0 + cx;
-                int py = y0 + ry;
-                if (px >= 0 && px < WIDTH && py >= 0 && py < HEIGHT) {
-                    frameBuffer[idx(px, py)] = color;
+                int scale = 2;
+                int px = x0 + (cx * scale);
+                int py = y0 + (ry * scale);
+                // Draw a scale x scale block
+                for (int dx = 0; dx < scale; ++dx) {
+                    for (int dy = 0; dy < scale; ++dy) {
+                        int final_px = px + dx;
+                        int final_py = py + dy;
+                        if (final_px >= 0 && final_px < WIDTH && final_py >= 0 && final_py < HEIGHT) {
+                            frameBuffer[idx(final_px, final_py)] = color;
+                        }
+                    }
                 }
             }
         }
