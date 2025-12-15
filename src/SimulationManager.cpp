@@ -41,12 +41,9 @@ void SimulationManager::stepSimulation() {
 
 bool SimulationManager::setMaterialAt(int x, int y, Material type) {
     if (!inBounds(x, y)) return false;
-    if (type == Material::EMPTY) {
-        grid[idx(x, y)].type = type;
-    } else if (type == Material::STONE) {
-       setMaterialSprayAt(x, y, type, 5, 100, false);
-    } 
-    else {
+    if (type == Material::EMPTY || type == Material::STONE) {
+        setMaterialSprayAt(x, y, type, 5, 100, false);
+    } else {
         setMaterialSprayAt(x, y, type, 15, 2, true);
     }
     return true;
@@ -66,11 +63,12 @@ void SimulationManager::setMaterialSprayAt(int x, int y, Material type, int radi
                 }
                 bool randomCheck = (rand() % 100) < density;
                 if (!randomCheck) continue;
-                if (inBounds(nx, ny) && grid[idx(nx, ny)].type == Material::EMPTY) {
+                if (inBounds(nx, ny) && (grid[idx(nx, ny)].type == Material::EMPTY || type == Material::EMPTY)) {
                     grid[idx(nx, ny)].type = type;
+                    grid[idx(nx, ny)].density = densityMap[static_cast<int>(type)];
                 }
-            }
         }
+    }
 }
 
 SimulationManager::SimulationManager() {
@@ -80,9 +78,15 @@ SimulationManager::SimulationManager() {
             BLUE,     // water = blue
             GRAY      // stone = gray
         };
+        densityMap = {
+            EMPTY_DENSITY,
+            SAND_DENSITY,
+            WATER_DENSITY,
+            STONE_DENSITY
+        };
     
         frameBuffer.resize(WIDTH * HEIGHT, palette[static_cast<int>(Material::EMPTY)]);
-        grid.resize(WIDTH * HEIGHT, {0,0,Material::EMPTY});
+        grid.resize(WIDTH * HEIGHT, {0,0,Material::EMPTY,EMPTY_DENSITY});
 }
                 
 int SimulationManager::idx(int x, int y) {
@@ -95,35 +99,35 @@ bool SimulationManager::inBounds(int x, int y) {
 
 inline void SimulationManager::updateSand(std::vector<Particle>& grid, int x, int y) {
     int i = idx(x, y);
-    // Try move down
-    if (inBounds(x, y+1) && grid[idx(x, y+1)].type == Material::EMPTY) {
-        std::swap(grid[i], grid[idx(x, y+1)]);
-    }
-    // Try diagonals
-    else if (inBounds(x-1, y+1) && grid[idx(x-1, y+1)].type == Material::EMPTY) {
-        std::swap(grid[i], grid[idx(x-1, y+1)]);
-    }
-    else if (inBounds(x+1, y+1) && grid[idx(x+1, y+1)].type == Material::EMPTY) {
-        std::swap(grid[i], grid[idx(x+1, y+1)]);
+        // Try move down
+        if (inBounds(x, y+1) && grid[idx(x, y+1)].density < grid[i].density) {
+            std::swap(grid[i], grid[idx(x, y+1)]);
+        }
+        // Try diagonals
+        else if (inBounds(x-1, y+1) && grid[idx(x-1, y+1)].density < grid[i].density) {
+            std::swap(grid[i], grid[idx(x-1, y+1)]);
+        }
+        else if (inBounds(x+1, y+1) && grid[idx(x+1, y+1)].density < grid[i].density) {
+            std::swap(grid[i], grid[idx(x+1, y+1)]);
     }
 }
 
 inline void SimulationManager::updateWater(std::vector<Particle>& grid, int x, int y) {
     int i = idx(x, y);
-    if (inBounds(x, y+1) && grid[idx(x, y+1)].type == Material::EMPTY) {
-        std::swap(grid[i], grid[idx(x, y+1)]);
-    }
-    // Try diagonals
-    else if (inBounds(x-1, y+1) && grid[idx(x-1, y+1)].type == Material::EMPTY) {
-        std::swap(grid[i], grid[idx(x-1, y+1)]);
-    }
-    else if (inBounds(x+1, y+1) && grid[idx(x+1, y+1)].type == Material::EMPTY) {
-        std::swap(grid[i], grid[idx(x+1, y+1)]);
-    }
-    else {
+    if (inBounds(x, y+1) && grid[idx(x, y+1)].density < grid[i].density) {
+            std::swap(grid[i], grid[idx(x, y+1)]);
+        }
+        // Try diagonals
+        else if (inBounds(x-1, y+1) && grid[idx(x-1, y+1)].density < grid[i].density) {
+            std::swap(grid[i], grid[idx(x-1, y+1)]);
+        }
+        else if (inBounds(x+1, y+1) && grid[idx(x+1, y+1)].density < grid[i].density) {
+            std::swap(grid[i], grid[idx(x+1, y+1)]);
+        }
+        else {
         int dir = (rand() & 1) ? -1 : 1; // left or right
-        if (inBounds(x+dir, y) && grid[idx(x+dir, y)].type == Material::EMPTY) {
-            std::swap(grid[i], grid[idx(x+dir, y)]);
+            if (inBounds(x+dir, y) && grid[idx(x+dir, y)].density < grid[i].density) {
+                std::swap(grid[i], grid[idx(x+dir, y)]);
         }
     }
 }

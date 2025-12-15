@@ -24,6 +24,7 @@ class SimulationManager {
         std::vector<uint32_t> frameBuffer;
         std::vector<Particle> grid;
         std::vector<uint32_t> palette;
+        std::vector<int> densityMap;
         
         SimulationManager();
 
