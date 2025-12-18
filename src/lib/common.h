@@ -22,6 +22,8 @@ constexpr int SAND_DENSITY = 70; // out of 100
 constexpr int WATER_DENSITY = 30; // out of 100
 constexpr int STONE_DENSITY = 100;
 
+constexpr int FPS_INTERVAL_MS = 500;
+
 enum class Material : uint8_t { EMPTY, SAND, WATER, STONE };
 
 struct Particle {

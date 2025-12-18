@@ -20,6 +20,7 @@ class GUIManager {
         Material getSelectedMaterial() const;
         void setSelectedHotbarSlot(int newIndex);
         void drawHotBar(std::vector<uint32_t>& frameBuffer, std::vector<uint32_t>* palettePtr, int y0);
+        void drawFPSCounter(std::vector<uint32_t>& frameBuffer, std::vector<uint32_t>* palettePtr, int x0, int y0, float fps);
 
     private:
         int selectedHotbarSlot;

@@ -2,6 +2,7 @@
 #include <GL/gl.h>
 #include <vector>
 #include <iostream>
+#include <chrono>
 
 #include "lib/common.h"
 #include "lib/GUIManager.h"
@@ -38,6 +39,10 @@ int main(int argc, char* argv[]) {
     renderClient.setUpGLState(WIN_W, WIN_H);
     GLuint textureID = renderClient.initializeTexture();
 
+    auto start = std::chrono::steady_clock::now();
+    int nbFrames = 0;
+    int fps_int = 0;
+
     while (RUNNING) {
         SDL_Event e;
         while (SDL_PollEvent(&e)) {
@@ -63,6 +68,20 @@ int main(int argc, char* argv[]) {
 
         simManager.stepSimulation();
         guiManager.drawHotBar(framebuffer, palettePtr, 0);
+
+        auto end = std::chrono::steady_clock::now();
+        nbFrames++;
+        auto elapsed = std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count();
+        if (elapsed >= FPS_INTERVAL_MS) {
+            float fps = nbFrames * 1000.0f / elapsed;
+            fps_int = static_cast<int>(fps);
+            nbFrames = 0;
+            start = end;
+        }
+
+        if (fps_int > 0) {
+            guiManager.drawFPSCounter(framebuffer, palettePtr, 10, HEIGHT - 20, fps_int);
+        }
 
         renderClient.updateTexture(textureID);
         renderClient.clear();

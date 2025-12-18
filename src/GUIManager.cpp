@@ -70,6 +70,28 @@ void GUIManager::drawHotBar(std::vector<uint32_t>& frameBuffer, std::vector<uint
     }
 }
 
+void GUIManager::drawFPSCounter(std::vector<uint32_t>& frameBuffer, std::vector<uint32_t>* palettePtr, int x0, int y0, float fps) {
+    // Draw FPS as integer
+    int fpsInt = static_cast<int>(fps);
+    uint32_t color = WHITE;
+    // Draw each digit
+    int hundreds = (fpsInt / 100) % 10;
+    int tens = (fpsInt / 10) % 10;
+    int units = fpsInt % 10;
+
+    int spacing = 8; // space between digits
+    if (hundreds > 0) {
+        drawDigit(frameBuffer, x0, y0, hundreds, color);
+        drawDigit(frameBuffer, x0 + 3 * 2 + spacing, y0, tens, color);
+        drawDigit(frameBuffer, x0 + 2 * (3 * 2 + spacing), y0, units, color);
+    } else if (tens > 0) {
+        drawDigit(frameBuffer, x0, y0, tens, color);
+        drawDigit(frameBuffer, x0 + 3 * 2 + spacing, y0, units, color);
+    } else {
+        drawDigit(frameBuffer, x0, y0, units, color);
+    }
+}
+
 void GUIManager::drawDigit(std::vector<uint32_t>& frameBuffer, int x0, int y0, uint8_t digit, uint32_t color) {
     if (digit < 0 || digit > 9) {
         std::cerr << "Invalid digit to draw: " << static_cast<int>(digit) << "\n";
