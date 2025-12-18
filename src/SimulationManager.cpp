@@ -116,18 +116,18 @@ inline void SimulationManager::updateWater(std::vector<Particle>& grid, int x, i
     int i = idx(x, y);
     if (inBounds(x, y+1) && grid[idx(x, y+1)].density < grid[i].density) {
             std::swap(grid[i], grid[idx(x, y+1)]);
-        }
-        // Try diagonals
-        else if (inBounds(x-1, y+1) && grid[idx(x-1, y+1)].density < grid[i].density) {
-            std::swap(grid[i], grid[idx(x-1, y+1)]);
-        }
-        else if (inBounds(x+1, y+1) && grid[idx(x+1, y+1)].density < grid[i].density) {
-            std::swap(grid[i], grid[idx(x+1, y+1)]);
-        }
-        else {
+    }
+    // Try diagonals
+    else if (inBounds(x-1, y+1) && grid[idx(x-1, y+1)].density < grid[i].density) {
+        std::swap(grid[i], grid[idx(x-1, y+1)]);
+    }
+    else if (inBounds(x+1, y+1) && grid[idx(x+1, y+1)].density < grid[i].density) {
+        std::swap(grid[i], grid[idx(x+1, y+1)]);
+    }
+    else {
         int dir = (rand() & 1) ? -1 : 1; // left or right
-            if (inBounds(x+dir, y) && grid[idx(x+dir, y)].density < grid[i].density) {
-                std::swap(grid[i], grid[idx(x+dir, y)]);
+        if (inBounds(x+dir, y) && grid[idx(x+dir, y)].density < grid[i].density) {
+            std::swap(grid[i], grid[idx(x+dir, y)]);
         }
     }
 }
