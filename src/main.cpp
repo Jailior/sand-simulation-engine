@@ -9,6 +9,8 @@
 #include "lib/SimulationManager.h"
 #include "lib/RenderClient.h"
 
+#define DEBUG 0
+
 bool RUNNING = true;
 
 int main(int argc, char* argv[]) {
@@ -39,6 +41,7 @@ int main(int argc, char* argv[]) {
     renderClient.setUpGLState(WIN_W, WIN_H);
     GLuint textureID = renderClient.initializeTexture();
 
+    // debugging FPS calculation
     auto start = std::chrono::steady_clock::now();
     int nbFrames = 0;
     int fps_int = 0;
@@ -69,18 +72,18 @@ int main(int argc, char* argv[]) {
         simManager.stepSimulation();
         guiManager.drawHotBar(framebuffer, palettePtr, 0);
 
-        auto end = std::chrono::steady_clock::now();
-        nbFrames++;
-        auto elapsed = std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count();
-        if (elapsed >= FPS_INTERVAL_MS) {
-            float fps = nbFrames * 1000.0f / elapsed;
-            fps_int = static_cast<int>(fps);
-            nbFrames = 0;
-            start = end;
-        }
-
-        if (fps_int > 0) {
-            guiManager.drawFPSCounter(framebuffer, palettePtr, 10, HEIGHT - 20, fps_int);
+    
+        if (DEBUG) {
+            auto end = std::chrono::steady_clock::now();
+            nbFrames++;
+            auto elapsed = std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count();
+            if (elapsed >= FPS_INTERVAL_MS) {
+                float fps = nbFrames * 1000.0f / elapsed;
+                fps_int = static_cast<int>(fps);
+                nbFrames = 0;
+                start = end;
+            }
+            std::cout << "FPS: " << fps_int << "\n";
         }
 
         renderClient.updateTexture(textureID);

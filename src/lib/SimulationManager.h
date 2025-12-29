@@ -2,6 +2,7 @@
 
 #include <SDL2/SDL.h>
 #include <vector>
+#include <ctime>
 
 #include "common.h"
 

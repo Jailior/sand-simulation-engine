@@ -72,21 +72,25 @@ void SimulationManager::setMaterialSprayAt(int x, int y, Material type, int radi
 }
 
 SimulationManager::SimulationManager() {
-        palette = {
-            BLACK,    // empty = black
-            YELLOW,   // sand = yellow
-            BLUE,     // water = blue
-            GRAY      // stone = gray
-        };
-        densityMap = {
-            EMPTY_DENSITY,
-            SAND_DENSITY,
-            WATER_DENSITY,
-            STONE_DENSITY
-        };
+    // Seed random number generator
+    std::srand(std::time(nullptr));
     
-        frameBuffer.resize(WIDTH * HEIGHT, palette[static_cast<int>(Material::EMPTY)]);
-        grid.resize(WIDTH * HEIGHT, {0,0,Material::EMPTY,EMPTY_DENSITY});
+    palette = {
+        BLACK,    // empty = black
+        YELLOW,   // sand = yellow
+        BLUE,     // water = blue
+        GRAY      // stone = gray
+    };
+
+    densityMap = {
+        EMPTY_DENSITY,
+        SAND_DENSITY,
+        WATER_DENSITY,
+        STONE_DENSITY
+    };
+
+    frameBuffer.resize(WIDTH * HEIGHT, palette[static_cast<int>(Material::EMPTY)]);
+    grid.resize(WIDTH * HEIGHT, {0,0,Material::EMPTY,EMPTY_DENSITY});
 }
                 
 int SimulationManager::idx(int x, int y) {
@@ -99,16 +103,26 @@ bool SimulationManager::inBounds(int x, int y) {
 
 inline void SimulationManager::updateSand(std::vector<Particle>& grid, int x, int y) {
     int i = idx(x, y);
-        // Try move down
-        if (inBounds(x, y+1) && grid[idx(x, y+1)].density < grid[i].density) {
-            std::swap(grid[i], grid[idx(x, y+1)]);
-        }
-        // Try diagonals
-        else if (inBounds(x-1, y+1) && grid[idx(x-1, y+1)].density < grid[i].density) {
+    // Try move down
+    if (inBounds(x, y+1) && grid[idx(x, y+1)].density < grid[i].density) {
+        std::swap(grid[i], grid[idx(x, y+1)]);
+    }
+    // Try diagonals
+    bool canMoveLeftDiagonal = inBounds(x-1, y+1) && grid[idx(x-1, y+1)].density < grid[i].density;
+    bool canMoveRightDiagonal = inBounds(x+1, y+1) && grid[idx(x+1, y+1)].density < grid[i].density;
+    if (canMoveLeftDiagonal && canMoveRightDiagonal) {
+        if (rand() & 1) {
             std::swap(grid[i], grid[idx(x-1, y+1)]);
         }
-        else if (inBounds(x+1, y+1) && grid[idx(x+1, y+1)].density < grid[i].density) {
+        else {
             std::swap(grid[i], grid[idx(x+1, y+1)]);
+        }
+    }
+    else if (canMoveLeftDiagonal) {
+        std::swap(grid[i], grid[idx(x-1, y+1)]);
+    }
+    else if (canMoveRightDiagonal) {
+        std::swap(grid[i], grid[idx(x+1, y+1)]);
     }
 }
 
@@ -118,10 +132,20 @@ inline void SimulationManager::updateWater(std::vector<Particle>& grid, int x, i
             std::swap(grid[i], grid[idx(x, y+1)]);
     }
     // Try diagonals
-    else if (inBounds(x-1, y+1) && grid[idx(x-1, y+1)].density < grid[i].density) {
+    bool canMoveLeftDiagonal = inBounds(x-1, y+1) && grid[idx(x-1, y+1)].density < grid[i].density;
+    bool canMoveRightDiagonal = inBounds(x+1, y+1) && grid[idx(x+1, y+1)].density < grid[i].density;
+    if (canMoveLeftDiagonal && canMoveRightDiagonal) {
+        if (rand() & 1) {
+            std::swap(grid[i], grid[idx(x-1, y+1)]);
+        }
+        else {
+            std::swap(grid[i], grid[idx(x+1, y+1)]);
+        }
+    }
+    else if (canMoveLeftDiagonal) {
         std::swap(grid[i], grid[idx(x-1, y+1)]);
     }
-    else if (inBounds(x+1, y+1) && grid[idx(x+1, y+1)].density < grid[i].density) {
+    else if (canMoveRightDiagonal) {
         std::swap(grid[i], grid[idx(x+1, y+1)]);
     }
     else {
